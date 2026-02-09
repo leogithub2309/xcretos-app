@@ -1,0 +1,37 @@
+<nav class="sticky top-0 z-50 px-6 py-4 flex justify-between items-center border-b border-white/10 backdrop-blur-md">
+    <div class="flex items-center gap-2">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: linear-gradient(to right, var(--burgundy), var(--magenta))">
+                <span class="text-white font-bold text-xl">X</span>
+        </div>
+        <h1 class="text-xl font-bold tracking-tighter">XCR<span class="text-[#F7E06A]">ETOS</span></h1>
+    </div>
+        
+    <div class="flex items-center gap-6">
+        <button class="relative p-2 hover:bg-white/5 rounded-full transition-colors"  (click)="toggleCartModal()">
+            <span class="text-2xl">🛒</span>
+                <div id="cart-count" class="absolute -top-1 -right-1 w-5 h-5 bg-[#F7E06A] text-black text-[10px] font-bold rounded-full flex items-center justify-center">0</div>
+        </button>
+    </div>
+</nav>
+<!-- Modal de Carrito (Simulando Signal State) -->
+<div id="cart-modal" #cartModal class="fixed inset-0 z-[100] hidden">
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" (click)="toggleCartModal()"></div>
+    <div class="absolute right-0 top-0 h-full w-full max-w-md bg-[#121212] border-l border-white/10 p-8 shadow-2xl overflow-y-auto">
+        <div class="flex justify-between items-center mb-8">
+            <h3 class="text-2xl font-bold">Tu Carrito</h3>
+            <button (click)="toggleCartModal()" class="text-gray-400 hover:text-white text-3xl">&times;</button>
+        </div>
+        <div id="cart-items" class="space-y-4 mb-8">
+            <!-- Items del carrito -->
+        </div>
+        <div class="border-t border-white/10 pt-6">
+            <div class="flex justify-between text-xl font-bold mb-6">
+                <span>Total</span>
+                <span id="cart-total" class="text-[#F7E06A]">$0.00</span>
+            </div>
+            <button class="w-full gold-button py-4 rounded-xl text-lg uppercase tracking-widest" (click)="checkout()">
+                Finalizar Compra
+            </button>
+        </div>
+    </div>
+</div>

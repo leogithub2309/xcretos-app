@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Exclusivo</title>
+    <!-- Chosen Palette: Obsidian Luxury (Fondos oscuros/negro, Acentos Dorados, Púrpura para CTAs) -->
+    <!-- Application Structure Plan: El 'reporte' describe una estructura de landing page de conversión clásica. Mi diseño implementa esta estructura lineal y vertical. La navegación principal (Header) y el CTA del 'Hero' usarán JS para un 'smooth scroll' a las anclas de sección (#nosotros, #categorias, #planes). La interactividad principal se centrará en la sección de 'Planes', donde el usuario seleccionará un plan (Básico, Premium, VIP). Esta selección se gestionará con JS, actualizando visualmente el plan activo y cambiando dinámicamente el texto del botón CTA final para reflejar la selección (ej. 'Suscribirse al Plan VIP'), guiando al usuario hacia la conversión. -->
+    <!-- Visualization & Content Choices: El 'reporte' no contiene datos cuantitativos para visualización (Chart.js/Plotly no se usan). El enfoque está en la presentación de contenido estructural y el flujo de conversión. Paleta: 'Obsidian Luxury' (I. Identidad). Tipografía: 'Oswald' (títulos) y 'Lato' (cuerpo) (I. Identidad). Secciones (II. Estructura): Hero, Sobre Nosotros, Categorías, Testimonios implementadas como secciones HTML con layout Flex/Grid de Tailwind. Flujo de Suscripción (III. Flujo): Esta es la interacción clave. Se usan 3 tarjetas (HTML/Tailwind) para los planes. Se añade JS para: 1. Detectar el clic en una tarjeta de plan. 2. Aplicar una clase 'active-plan' (borde púrpura) a la tarjeta seleccionada y removerla de las otras. 3. Actualizar dinámicamente el texto del botón 'cta-final' (ej. 'Suscribirse al Plan VIP') basado en el data-plan-name. Iconos (II. Categorías): Se usan caracteres Unicode (✨, 👑, 🎬, 🔴) como iconos, respetando la restricción de NO SVG. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Oswald:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+                --color-amber-light: #FFFBEB; /* Amber 50 - Fondo muy claro y cálido */
+                --color-emerald-deep: #065F46; /* Emerald 800 - Acento y branding */
+                --color-dark-neutral: #333333; /* Gris oscuro para la mayor parte del texto (mejor contraste suave) */
+                --color-neutral-subtle: #E5E7EB; /* Gray 200 - Líneas y fondos sutiles */
+                --color-gold-accent: #D97706; /* Amber 700 - CTA/Hover */
+            }
+        body {
+            font-family: 'Lato', sans-serif;
+            /* background-color: #111827; #834658 #e48787 */
+            color: #E5E7EB;
+        }
+        
+        .bg-gradient{
+            background: linear-gradient(to bottom, #FF3399, #e084a0) !important;
+            border-bottom: 2px solid;
+            border-bottom-color: #3a3a3a, transparent;
+        }
+
+        .bg-gradient-2{
+            background: linear-gradient(to bottom, #e084a0, #cf8da1) !important;
+            border: none;
+        }
+
+        .bg-gradient-3{
+            background: linear-gradient(to top, #fff, #cf8da1) !important;
+            border: none;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+        }
+        .hero-bg {
+            background-color: #000;
+            background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(17, 24, 39, 1));
+        }
+        .add-to-cart-btn {
+            background-color: var(--color-emerald-deep);
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        .add-to-cart-btn:hover {
+            background-color: var(--color-gold-accent); /* Ámbar/Oro en CTA hover */
+        }
+        .product-card {
+            background-color: white;
+            border: 1px solid var(--color-neutral-subtle);
+        }
+        .product-card:hover {
+            box-shadow: 0 5px 15px -3px rgba(0, 0, 0, 0.05);
+            border-color: white;
+        }
+       /*  .nav-link {
+            @apply px-4 py-2 text-sm font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700 transition-colors;
+        }
+        .cta-button {
+            @apply inline-block px-8 py-3 text-lg font-bold text-white uppercase bg-purple-600 rounded-full shadow-lg hover:bg-purple-700 transition-transform transform hover:scale-105;
+        }
+        .plan-card {
+            @apply bg-gray-800 rounded-lg p-6 shadow-xl border-4 border-transparent cursor-pointer transition-all duration-300;
+        }
+        .plan-card.active-plan {
+
+            @apply border-purple-500 shadow-2xl scale-105;
+            background-color: #1F2937;
+        } */
+    </style>
+</head>
+<body>
+
+    <header class="fixed top-0 left-0 right-0 z-50 bg-gray-500/30 bg-opacity-80 backdrop-blur-sm shadow-md">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="#" class="text-3xl font-bold text-rose-600 tracking-[3px]" style="font-family: 'Oswald', sans-serif;">
+                XECRETOS
+            </a>
+            <div class="hidden md:flex items-center space-x-2">
+                <a href="#nosotros" class="nav-link px-4 py-2 text-sm font-medium text-gray-700 rounded-md hover:text-white hover:bg-rose-600 transition-colors">Sobre Nosotros</a>
+                <a href="#categorias" class="nav-link px-4 py-2 text-sm font-medium text-gray-700 rounded-md hover:text-white hover:bg-rose-600 transition-colors">Categorías</a>
+                <a href="#planes" class="nav-link px-4 py-2 text-sm font-medium text-gray-700 rounded-md hover:text-white hover:bg-rose-600 transition-colors">Planes</a>
+                <a href="#" class="px-5 py-2 text-sm font-medium text-white bg-rose-700 rounded-full hover:bg-rose-800 transition-colors">Login</a>
+            </div>
+            <div class="md:hidden">
+                <button class="text-white focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero" class="bg-gradient min-h-screen flex items-center justify-center text-center pt-20 px-4 outline-none border-none">
+            <div class="max-w-3xl">
+                <h1 class="text-6xl md:text-8xl font-bold text-white">
+                    Deseo Sin Límites
+                </h1>
+                <p class="mt-4 text-xl md:text-2xl text-gray-300 max-w-xl mx-auto">
+                    Descubre un universo de contenido exclusivo que no encontrarás en ningún otro lugar.
+                </p>
+                <a href="#planes" class="cta-button mt-10 inline-block px-8 py-3 text-lg font-bold text-white uppercase bg-rose-600 rounded-full shadow-lg hover:bg-rose-800 transition-transform transform hover:scale-105">
+                    ¡Explorar Ahora!
+                </a>
+            </div>
+        </section>
+
+        <section id="nosotros" class="bg-gradient-2 py-20 md:py-32">
+            <div class="container mx-auto px-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                    <div>
+                        <h2 class="text-4xl font-bold text-white mb-6">El Contenido Que Defines</h2>
+                        <p class="text-lg text-gray-300 mb-8">
+                            Más que una galería, somos tu destino para videos y transmisiones en vivo 100% exclusivas. Curamos colecciones de alta definición que despiertan tus sentidos, todo en una plataforma segura y discreta.
+                        </p>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="bg-rose-600 p-6 rounded-lg shadow-lg flex items-center">
+                            <span class="text-3xl text-yellow-400 mr-4">📺</span>
+                            <div>
+                                <h3 class="text-2xl font-bold text-white">Transmisiones 4K en Vivo</h3>
+                                <p class="text-gray-400">Calidad de imagen superior en tiempo real.</p>
+                            </div>
+                        </div>
+                        <div class="bg-rose-600 p-6 rounded-lg shadow-lg flex items-center">
+                            <span class="text-3xl text-yellow-400 mr-4">🔥</span>
+                            <div>
+                                <h3 class="text-2xl font-bold text-white">Contenido Interactivo Único</h3>
+                                <p class="text-gray-400">Tú decides el rumbo de la acción.</p>
+                            </div>
+                        </div>
+                        <div class="bg-rose-600 p-6 rounded-lg shadow-lg flex items-center">
+                            <span class="text-3xl text-yellow-400 mr-4">✨</span>
+                            <div>
+                                <h3 class="text-2xl font-bold text-white">Actualizaciones Diarias</h3>
+                                <p class="text-gray-400">Siempre hay algo nuevo por descubrir.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="categorias" class="py-20 md:py-32 bg-gradient-3">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl font-bold text-white mb-4">Explora Nuestros Universos</h2>
+                <p class="text-lg text-gray-500 mb-16 max-w-2xl mx-auto">Navega por colecciones curadas para cada deseo. Encuentra tu fantasía perfecta.</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+                    <div class="bg-gradient-2 p-8 rounded-lg shadow-xl transform transition-transform hover:scale-105 hover:shadow-2xl">
+                        <span class="text-6xl">✨</span>
+                        <h3 class="text-3xl font-bold text-white mt-4">Fantasía</h3>
+                        <p class="text-gray-300 mt-2">Escenarios y guiones que van más allá.</p>
+                    </div>
+                    <div class="bg-gradient-2 p-8 rounded-lg shadow-xl transform transition-transform hover:scale-105 hover:shadow-2xl">
+                        <span class="text-6xl">👑</span>
+                        <h3 class="text-3xl font-bold text-white mt-4">Exclusivo VIP</h3>
+                        <p class="text-gray-300 mt-2">El contenido premium que no verás en otro lado.</p>
+                    </div>
+                    <div class="bg-gradient-2 p-8 rounded-lg shadow-xl transform transition-transform hover:scale-105 hover:shadow-2xl">
+                        <span class="text-6xl">🎬</span>
+                        <h3 class="text-3xl font-bold text-white mt-4">Clásico</h3>
+                        <p class="text-gray-300 mt-2">Las escenas icónicas que definieron el género.</p>
+                    </div>
+                    <div class="bg-gradient-2 p-8 rounded-lg shadow-xl transform transition-transform hover:scale-105 hover:shadow-2xl">
+                        <span class="text-6xl">🔴</span>
+                        <h3 class="text-3xl font-bold text-white mt-4">En Vivo</h3>
+                        <p class="text-gray-300 mt-2">Conéctate e interactúa ahora mismo.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="testimonios" class="py-20 md:py-32">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-gray-700 mb-16 text-center">Tienda en Linea</h2>
+                <div class="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-8">
+                    <div class="product-card rounded-lg overflow-hidden group transition-all duration-300">
+                        <div class="w-full aspect-square bg-neutral-subtle overflow-hidden">
+                            <img src="/img/ifonnx-toys-8-7EeeAM-RA-unsplash.jpg" alt="Imagen 1" class="w-full h-[80%]  group-hover:scale-[1.03] transition-transform duration-500">
+                        </div>
+                        <div class="p-4 mt-[-5rem] text-center flex flex-col items-center gap-3">
+                            <h3 class="text-lg text-gray-700 font-medium wide-tracking uppercase mb-2">Vibrador</h3>
+                            <p class="text-xl text-zinc-600 font-light">€5.56</p>
+                            <a href="#" class="cta-button mt-10 inline-block px-8 py-3 text-lg font-bold text-white uppercase bg-rose-600 rounded-full shadow-lg hover:bg-rose-800 transition-transform transform hover:scale-105">
+                                Añadir al Carrito
+                            </a>
+                        </div>
+                    </div>
+                    <div class="product-card rounded-lg overflow-hidden group transition-all duration-300">
+                        <div class="w-full aspect-square bg-neutral-subtle overflow-hidden">
+                            <img src="/img/ifonnx-toys-ck1ZlJbXrlg-unsplash.jpg" alt="Imagen 2" class="w-full h-[80%]  group-hover:scale-[1.03] transition-transform duration-500">
+                        </div>
+                        <div class="p-4 mt-[-5rem] text-center flex flex-col items-center gap-3">
+                            <h3 class="text-lg text-gray-700 font-medium wide-tracking uppercase mb-2">Juguete Sexual</h3>
+                            <p class="text-xl text-zinc-600 font-light">€4.20</p>
+                            <a href="#" class="cta-button mt-10 inline-block px-8 py-3 text-lg font-bold text-white uppercase bg-rose-600 rounded-full shadow-lg hover:bg-rose-800 transition-transform transform hover:scale-105">
+                                Añadir al Carrito
+                            </a>
+                        </div>
+                    </div>
+                    <div class="product-card rounded-lg overflow-hidden group transition-all duration-300">
+                        <div class="w-full aspect-square bg-neutral-subtle overflow-hidden">
+                            <img src="/img/ifonnx-toys-Ii43JmypSLY-unsplash.jpg" alt="Imagen 1" class="w-full h-[80%]  group-hover:scale-[1.03] transition-transform duration-500">
+                        </div>
+                        <div class="p-4 mt-[-5rem] text-center flex flex-col items-center gap-3">
+                            <h3 class="text-lg text-gray-700 font-medium wide-tracking uppercase mb-2">Vibrador/Consolador</h3>
+                            <p class="text-xl text-zinc-600 font-light">€7.43</p>
+                            <a href="#" class="cta-button mt-10 inline-block px-8 py-3 text-lg font-bold text-white uppercase bg-rose-600 rounded-full shadow-lg hover:bg-rose-800 transition-transform transform hover:scale-105">
+                                Añadir al Carrito
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+       <!--  <section id="planes" class="py-20 md:py-32 bg-gray-900">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">¡Desbloquea el Acceso Total!</h2>
+                <p class="text-lg text-gray-300 mb-16 max-w-2xl mx-auto">Tu Pase VIP comienza aquí. Elige el plan que encienda tu deseo. Cancela en cualquier momento.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                    
+                    <div class="plan-card bg-gray-800 rounded-lg p-6 shadow-xl border-4 border-transparent cursor-pointer transition-all duration-300" data-plan-id="basico" data-plan-name="Básico">
+                        <h3 class="text-3xl font-bold text-white">Básico</h3>
+                        <p class="text-gray-400">Mensual</p>
+                        <div class="text-5xl font-bold text-yellow-400 my-4">$9.99</div>
+                        <p class="text-gray-400 mb-6">/ mes</p>
+                        <ul class="text-left space-y-3 text-gray-300">
+                            <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Acceso a videos HD</li>
+                            <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> 1 Dispositivo a la vez</li>
+                            <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Contenido Clásico</li>
+                            <li class="flex items-center text-gray-500"><span class="text-red-400 mr-2">✗</span> Shows en Vivo</li>
+                            <li class="flex items-center text-gray-500"><span class="text-red-400 mr-2">✗</span> Contenido Interactivo</li>
+                        </ul>
+                    </div>
+
+                    <div class="plan-card active-plan bg-gray-800 rounded-lg p-6 shadow-xl border-4 border-transparent cursor-pointer transition-all duration-300" data-plan-id="premium" data-plan-name="Premium">
+                        <div class="absolute top-0 -mt-4 left-1/2 -translate-x-1/2 bg-yellow-400 text-gray-900 text-sm font-bold px-3 py-1 rounded-full uppercase">Más Popular</div>
+                        <h3 class="text-3xl font-bold text-white">Premium</h3>
+                        <p class="text-gray-400">Trimestral</p>
+                        <div class="text-5xl font-bold text-yellow-400 my-4">$24.99</div>
+                        <p class="text-gray-400 mb-6">/ trimestre (Ahorra 15%)</p>
+                        <ul class="text-left space-y-3 text-gray-300">
+                            <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Acceso a videos 4K</li>
+                            <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> 2 Dispositivos a la vez</li>
+                            <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Clásico + Fantasía</li>
+                            <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Shows en Vivo</li>
+                            <li class="flex items-center text-gray-500"><span class="text-red-400 mr-2">✗</span> Contenido Interactivo</li>
+                        </ul>
+                    </div>
+
+                    <div class="plan-card bg-gray-800 rounded-lg p-6 shadow-xl border-4 border-transparent cursor-pointer transition-all duration-300" data-plan-id="vip" data-plan-name="VIP">
+                        <h3 class="text-3xl font-bold text-white">VIP</h3>
+                        <p class="text-gray-400">Anual</p>
+                        <div class="text-5xl font-bold text-yellow-400 my-4">$79.99</div>
+                        <p class="text-gray-400 mb-6">/ año (Ahorra 33%)</p>
+                        <ul class="text-left space-y-3 text-gray-300">
+                            <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Acceso a videos 4K</li>
+                            <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> 4 Dispositivos a la vez</li>
+                            <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Todo el Contenido</li>
+                            <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Shows en Vivo</li>
+                            <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Contenido Interactivo</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-16">
+                    <button id="cta-final" class="cta-button text-2xl px-12 py-5">
+                        Suscribirse al Plan Premium
+                    </button>
+                    <p class="text-gray-400 mt-6 text-sm">
+                        🔒 Pago 100% Seguro. Facturación Discreta Garantizada.
+                    </p>
+                </div>
+            </div>
+        </section> -->
+    </main>
+
+    <footer class="bg-[#FF3399] py-12">
+        <div class="container mx-auto px-6 text-center text-gray-500">
+            <div class="space-x-6 mb-4">
+                <a href="#" class="text-white hover:text-gray-300">Términos</a>
+                <a href="#" class="text-white hover:text-gray-300">Privacidad</a>
+                <a href="#" class="text-white hover:text-gray-300">Soporte</a>
+                <a href="#" class="text-white hover:text-gray-300">2257</a>
+            </div>
+            <p class="text-white">&copy; 2025 XECRETOS. Todos los derechos reservados. Solo para mayores de 18 años.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let selectedPlanId = 'premium';
+            const ctaFinalButton = document.getElementById('cta-final');
+            const planCards = document.querySelectorAll('.plan-card');
+
+            function setActivePlan(card) {
+                planCards.forEach(c => c.classList.remove('active-plan'));
+                card.classList.add('active-plan');
+                
+                const planName = card.dataset.planName;
+                selectedPlanId = card.dataset.planId;
+                
+                ctaFinalButton.innerText = `Suscribirse al Plan ${planName}`;
+            }
+
+            planCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    setActivePlan(card);
+                });
+            });
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        const headerOffset = 80;
+                        const elementPosition = targetElement.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: "smooth"
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

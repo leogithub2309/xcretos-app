@@ -1,0 +1,72 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "tailwindcss";
+:root {
+    --burgundy: #6A0D32;
+    --magenta: #E0217C;
+    --gold: #F7E06A;
+    --dark-bg: #0F0F0F;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--dark-bg);
+    color: white;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+/* Fondo Degradado Principal */
+.bg-main-gradient {
+    background: radial-gradient(circle at top left, var(--burgundy), transparent),
+        radial-gradient(circle at bottom right, #2a0514, var(--dark-bg));
+    min-height: 100vh;
+}
+
+/* Glassmorphism Effect */
+.glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(247, 224, 106, 0.1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.glass-card:hover {
+    transform: translateY(-10px);
+    border-color: rgba(247, 224, 106, 0.5);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+}
+
+.gold-button {
+    background-color: var(--gold);
+    color: #1e1e1e;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.gold-button:hover {
+    background-color: #fff1a8;
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(247, 224, 106, 0.4);
+}
+
+.category-badge {
+    background: linear-gradient(135deg, var(--burgundy), var(--magenta));
+    border: 1px solid rgba(247, 224, 106, 0.3);
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-card {
+    animation: fadeIn 0.6s ease forwards;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--dark-bg); }
+::-webkit-scrollbar-thumb { background: var(--burgundy); border-radius: 10px; }
